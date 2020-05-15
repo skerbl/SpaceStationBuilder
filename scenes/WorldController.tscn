@@ -1,8 +1,8 @@
 [gd_scene load_steps=5 format=2]
 
-[ext_resource path="res://assets/sprites/TileFloor.png" type="Texture" id=1]
+[ext_resource path="res://assets/sprites/tiles/TileFloor.png" type="Texture" id=1]
 [ext_resource path="res://Controllers/WorldController.cs" type="Script" id=2]
-[ext_resource path="res://assets/sprites/TileEmpty.png" type="Texture" id=3]
+[ext_resource path="res://assets/sprites/tiles/TileEmpty.png" type="Texture" id=3]
 
 [sub_resource type="TileSet" id=1]
 0/name = "TileEmpty.png 0"

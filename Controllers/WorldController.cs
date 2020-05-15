@@ -40,7 +40,14 @@ namespace SpaceStationBuilder
 		// In Unity, this would also take a GameObject to update the SpriteRenderer's Sprite
 		void OnTileTypeChanged(Tile tileData)
 		{
-			tileMap.SetCell(tileData.X, tileData.Y, (int)tileData.Type);
+			if (tileData.Type == Tile.TileType.Empty)
+			{
+				tileMap.SetCell(tileData.X, tileData.Y, -1);
+			}
+			else
+			{
+				tileMap.SetCell(tileData.X, tileData.Y, (int)tileData.Type);
+			}
 		}
 
 		//  // Called every frame. 'delta' is the elapsed time since the previous frame.

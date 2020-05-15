@@ -53,6 +53,8 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\MouseManager.cs" />
+    <Compile Include="Controllers\MoveCamera.cs" />
     <Compile Include="Controllers\WorldController.cs" />
     <Compile Include="Models\InstalledObject.cs" />
     <Compile Include="Models\LooseObject.cs" />
