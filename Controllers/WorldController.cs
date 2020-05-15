@@ -7,7 +7,6 @@ namespace SpaceStationBuilder
 	{
 		private World world;
 		private TileMap tileMap;
-		private float randomizeTileTimer = 2f;
 
 		// Called when the node enters the scene tree for the first time.
 		public override void _Ready()
@@ -21,34 +20,33 @@ namespace SpaceStationBuilder
 				{
 					// In Unity, I'd create a new GameObject here, and set its correct position according to the tile index. 
 					// Give it a name and a SpriteRenderer, and set the Sprite according to its type.
-					// newTile.name = "Tile_" + x + "_" + y;
-					// newTile.transform.position = new Vector3(tileData.X, tileData.Y, 0);
+					// Tile tileData = world.GetTileAt(x, y);
+					// GameObject tile_gameobject = new GameObject();
+					// tile_gameobject.name = "Tile_" + x + "_" + y;
+					// tile_gameobject.transform.position = new Vector3(tileData.X, tileData.Y, 0);
+					// tile_gameobject.AddComponent<Spriterenderer>();
+					// tileData.RegisterTileTypeChangedCallback( (tile) => { OnTileTypeChanged(tile, tile_gameobject) })
 
 					// In Godot, however, the TileMap handles all of that.
+					// It could also be set with pre-made tilemaps
 
-					//Tile tileData = world.GetTileAt(x, y);
-					//tileMap.SetCell(x, y, (int)tileData.Type);
 					world.GetTileAt(x, y).RegisterTileTypeChangedCallback(OnTileTypeChanged);
 				}
 			}
-
+			
 			world.RandomizeTiles();
 		}
-
+		
+		// In Unity, this would also take a GameObject to update the SpriteRenderer's Sprite
 		void OnTileTypeChanged(Tile tileData)
 		{
 			tileMap.SetCell(tileData.X, tileData.Y, (int)tileData.Type);
 		}
 
 		//  // Called every frame. 'delta' is the elapsed time since the previous frame.
-		public override void _Process(float delta)
-		{
-			randomizeTileTimer -= delta;
-			if (randomizeTileTimer < 0)
-			{
-				world.RandomizeTiles();
-				randomizeTileTimer = 2f;
-			}
-		}
+		//public override void _Process(float delta)
+		//{
+		//	
+		//}
 	}
 }

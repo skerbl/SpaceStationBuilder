@@ -26,4 +26,6 @@ window/size/height=1080
 
 [rendering]
 
+quality/2d/use_pixel_snap=true
+quality/depth/hdr=false
 environment/default_environment="res://default_env.tres"
