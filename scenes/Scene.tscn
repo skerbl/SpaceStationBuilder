@@ -1,14 +1,18 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://assets/background/Orbit_insertion.jpg" type="Texture" id=1]
 [ext_resource path="res://scenes/WorldController.tscn" type="PackedScene" id=2]
 [ext_resource path="res://scenes/GUI.tscn" type="PackedScene" id=3]
+[ext_resource path="res://Controllers/CameraParallax.cs" type="Script" id=4]
 
 [node name="Scene" type="Node2D"]
 
 [node name="Background" type="Sprite" parent="."]
-position = Vector2( 1402.76, 478.786 )
+position = Vector2( 1408, 512 )
+z_index = -1
 texture = ExtResource( 1 )
+script = ExtResource( 4 )
+parallaxStrength = 0.99
 
 [node name="WorldController" parent="." instance=ExtResource( 2 )]
 

@@ -53,6 +53,7 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\CameraParallax.cs" />
     <Compile Include="Controllers\MouseManager.cs" />
     <Compile Include="Controllers\MoveCamera.cs" />
     <Compile Include="Controllers\WorldController.cs" />
