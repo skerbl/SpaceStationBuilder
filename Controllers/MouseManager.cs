@@ -5,16 +5,26 @@ namespace SpaceStationBuilder
 {
     public class MouseManager : Node2D
     {
-        private TileMap tileSelectionGrid;
-        private Camera2D mainCamera;
-        private Vector2 _previousPosition = new Vector2(Vector2.Zero);
+        private TileMap _tileSelectionGrid;
+        private TileMap _worldGrid;
+        private Camera2D _mainCamera;
+
+        private Vector2 _tilePosition = new Vector2(Vector2.Zero);
+        private Vector2 _oldTilePosition = new Vector2(Vector2.Zero);
+        private Vector2 _previousMousePosition = new Vector2(Vector2.Zero);
         private bool _moveCamera = false;
 
         // Called when the node enters the scene tree for the first time.
         public override void _Ready()
         {
-            tileSelectionGrid = GetNode<TileMap>("../TileSelectionGrid");
-            mainCamera = GetNode<Camera2D>("../../Camera2D");
+            _worldGrid = GetNode<TileMap>("../../WorldController/World");
+            _tileSelectionGrid = GetNode<TileMap>("../TileSelectionGrid");
+            _mainCamera = GetNode<Camera2D>("../../Camera2D");
+        }
+
+        public override void _Process(float delta)
+        {
+            
         }
 
         // This gets called whenever an input event occurs that does not belong to a Control (i.e. GUI) element.
@@ -29,7 +39,7 @@ namespace SpaceStationBuilder
                 GetTree().SetInputAsHandled();
                 if (@event.IsPressed())
                 {
-                    _previousPosition = clickEvent.Position;
+                    _previousMousePosition = clickEvent.Position;
                     _moveCamera = true;
                 }
                 else
@@ -40,12 +50,25 @@ namespace SpaceStationBuilder
             else if (moveEvent != null && _moveCamera)
             {
                 GetTree().SetInputAsHandled();
-                mainCamera.Position += (_previousPosition - moveEvent.Position);
-                _previousPosition = moveEvent.Position;
+                _mainCamera.Position += (_previousMousePosition - moveEvent.Position);
+                _previousMousePosition = moveEvent.Position;
             }
 
             #endregion
 
+            if (moveEvent != null)
+            {
+                _tilePosition = _tileSelectionGrid.WorldToMap(moveEvent.Position + _mainCamera.Position);
+
+                if (_tilePosition != _oldTilePosition && _tileSelectionGrid.GetCellv(_tilePosition) == -1)
+                {
+                    _tileSelectionGrid.SetCellv(_tilePosition, 0);
+                    _tileSelectionGrid.SetCellv(_oldTilePosition, -1);
+                    _oldTilePosition = _tilePosition;
+                }
+                
+                
+            }
         }
     }
 }
