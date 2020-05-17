@@ -5,26 +5,21 @@ namespace SpaceStationBuilder
 {
     public class MouseManager : Node2D
     {
-        private TileMap _tileSelectionGrid;
-        private TileMap _worldGrid;
-        private Camera2D _mainCamera;
+        private TileMap tileSelectionGrid;
+        private TileMap worldGrid;
+        private Camera2D mainCamera;
 
-        private Vector2 _tilePosition = new Vector2(Vector2.Zero);
-        private Vector2 _oldTilePosition = new Vector2(Vector2.Zero);
-        private Vector2 _previousMousePosition = new Vector2(Vector2.Zero);
-        private bool _moveCamera = false;
+        private Vector2 tilePos = new Vector2(Vector2.Zero);
+        private Vector2 oldTilePos = new Vector2(Vector2.Zero);
+        private Vector2 previousMousePosition = new Vector2(Vector2.Zero);
+        private bool moveCamera = false;
 
         // Called when the node enters the scene tree for the first time.
         public override void _Ready()
         {
-            _worldGrid = GetNode<TileMap>("../../WorldController/World");
-            _tileSelectionGrid = GetNode<TileMap>("../TileSelectionGrid");
-            _mainCamera = GetNode<Camera2D>("../../Camera2D");
-        }
-
-        public override void _Process(float delta)
-        {
-            
+            worldGrid = GetNode<TileMap>("../../WorldController/World");
+            tileSelectionGrid = GetNode<TileMap>("../TileSelectionGrid");
+            mainCamera = GetNode<Camera2D>("../../Camera2D");
         }
 
         // This gets called whenever an input event occurs that does not belong to a Control (i.e. GUI) element.
@@ -39,36 +34,50 @@ namespace SpaceStationBuilder
                 GetTree().SetInputAsHandled();
                 if (@event.IsPressed())
                 {
-                    _previousMousePosition = clickEvent.Position;
-                    _moveCamera = true;
+                    previousMousePosition = clickEvent.Position;
+                    moveCamera = true;
                 }
                 else
                 {
-                    _moveCamera = false;
+                    moveCamera = false;
                 }
             }
-            else if (moveEvent != null && _moveCamera)
+            else if (moveEvent != null && moveCamera)
             {
                 GetTree().SetInputAsHandled();
-                _mainCamera.Position += (_previousMousePosition - moveEvent.Position);
-                _previousMousePosition = moveEvent.Position;
+                mainCamera.Position += (previousMousePosition - moveEvent.Position);
+                previousMousePosition = moveEvent.Position;
             }
 
             #endregion
 
+            #region Grid selection cursor
+
             if (moveEvent != null)
             {
-                _tilePosition = _tileSelectionGrid.WorldToMap(moveEvent.Position + _mainCamera.Position);
+                tilePos = tileSelectionGrid.WorldToMap(moveEvent.Position + mainCamera.Position);
 
-                if (_tilePosition != _oldTilePosition && _tileSelectionGrid.GetCellv(_tilePosition) == -1)
+                if (tilePos != oldTilePos && tileSelectionGrid.GetCellv(tilePos) == -1)
                 {
-                    _tileSelectionGrid.SetCellv(_tilePosition, 0);
-                    _tileSelectionGrid.SetCellv(_oldTilePosition, -1);
-                    _oldTilePosition = _tilePosition;
+                    //if (tilePos.x < 0 || tilePos.x >= world.Width || tilePos.y < 0 || tilePos.y >= world.Height)
+                    if (!WorldController.Instance.IsTileWithinWorld((int)tilePos.x, (int)tilePos.y))
+                    {
+                        tileSelectionGrid.SetCellv(tilePos, -1);
+                        tileSelectionGrid.SetCellv(oldTilePos, -1);
+                        oldTilePos = tilePos;
+                        GD.Print("Out of this world!");
+                    }
+                    else
+                    {
+                        tileSelectionGrid.SetCellv(tilePos, 0);
+                        tileSelectionGrid.SetCellv(oldTilePos, -1);
+                        oldTilePos = tilePos;
+                        GD.Print("This is fine.");
+                    }
                 }
-                
-                
             }
+
+            #endregion
         }
     }
 }

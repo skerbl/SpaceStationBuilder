@@ -5,22 +5,36 @@ namespace SpaceStationBuilder
 {
 	public class WorldController : Node2D
 	{
-		private World world;
+		public static WorldController Instance { get; protected set; }
+
+		public World World { get; protected set; }
+
 		private TileMap tileMap;
+
+		
 
 		// Called when the node enters the scene tree for the first time.
 		public override void _Ready()
 		{
-			tileMap = GetNode<TileMap>("World");
-			world = new World();
-
-			for (int x = 0; x < world.Width; x++)
+			if (Instance != null)
 			{
-				for (int y = 0; y < world.Height; y++)
+				GD.Print("There should only be one WorldController instance.");
+			}
+			else
+			{
+				Instance = this;
+			}
+
+			tileMap = GetNode<TileMap>("World");
+			World = new World();
+
+			for (int x = 0; x < World.Width; x++)
+			{
+				for (int y = 0; y < World.Height; y++)
 				{
 					// In Unity, I'd create a new GameObject here, and set its correct position according to the tile index. 
 					// Give it a name and a SpriteRenderer, and set the Sprite according to its type.
-					// Tile tileData = world.GetTileAt(x, y);
+					// Tile tileData = World.GetTileAt(x, y);
 					// GameObject tile_gameobject = new GameObject();
 					// tile_gameobject.name = "Tile_" + x + "_" + y;
 					// tile_gameobject.transform.position = new Vector3(tileData.X, tileData.Y, 0);
@@ -30,11 +44,11 @@ namespace SpaceStationBuilder
 					// In Godot, however, the TileMap handles all of that.
 					// It could also be set with pre-made tilemaps
 
-					world.GetTileAt(x, y).RegisterTileTypeChangedCallback(OnTileTypeChanged);
+					World.GetTileAt(x, y).RegisterTileTypeChangedCallback(OnTileTypeChanged);
 				}
 			}
-			
-			world.RandomizeTiles();
+
+			World.RandomizeTiles();
 		}
 		
 		// In Unity, this would also take a GameObject to update the SpriteRenderer's Sprite
@@ -55,5 +69,13 @@ namespace SpaceStationBuilder
 		//{
 		//	
 		//}
+
+		public bool IsTileWithinWorld(int x, int y)
+		{
+			if (x < 0 || x >= World.Width || y < 0 || y >= World.Height)
+				return false;
+			else
+				return true;
+		}
 	}
 }
