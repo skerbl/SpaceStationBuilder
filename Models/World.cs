@@ -80,7 +80,7 @@ namespace SpaceStationBuilder
 		/// <returns>The requested <see cref="Tile"/>.</returns>
 		public Tile GetTileAt(int x, int y)
 		{
-			if (x > _width || x < 0 || y > _height || y < 0)
+			if (x > Width - 1 || x < 0 || y > Height - 1 || y < 0)
 			{
 				GD.Print("Tile (" + x + "," + y + ") is out of range!");
 				return null;

@@ -90,5 +90,39 @@ namespace SpaceStationBuilder
 			int y = (int)tilePosition.y;
 			return World.GetTileAt(x, y);
 		}
+
+		public void GridBoxSelect(Vector2 boxStart, Vector2 boxEnd)
+		{
+			int start_x = (int)boxStart.x;
+			int end_x = (int)boxEnd.x;
+			if (end_x < start_x)
+			{
+				int temp = end_x;
+				end_x = start_x;
+				start_x = temp;
+			}
+
+			int start_y = (int)boxStart.y;
+			int end_y = (int)boxEnd.y;
+			if (end_y < start_y)
+			{
+				int temp = end_y;
+				end_y = start_y;
+				start_y = temp;
+			}
+
+			Tile t;
+			for (int x = start_x; x <= end_x; x++)
+			{
+				for (int y = start_y; y <= end_y; y++)
+				{
+					t = World.GetTileAt(x, y);
+					if (t != null)
+					{
+						t.Type = Tile.TileType.Floor;
+					}
+				}
+			}
+		}
 	}
 }
