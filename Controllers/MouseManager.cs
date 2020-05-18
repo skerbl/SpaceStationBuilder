@@ -39,7 +39,7 @@ namespace SpaceStationBuilder
         public override void _UnhandledInput(InputEvent @event)
         {
             InputEventMouseButton clickEvent = @event as InputEventMouseButton;
-            InputEventMouseMotion moveEvent = @event as InputEventMouseMotion;
+            //InputEventMouseMotion moveEvent = @event as InputEventMouseMotion;
 
             #region Left mouse click
 
