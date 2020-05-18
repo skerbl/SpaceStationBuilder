@@ -63,19 +63,32 @@ namespace SpaceStationBuilder
 				tileMap.SetCell(tileData.X, tileData.Y, (int)tileData.Type);
 			}
 		}
-
-		//  // Called every frame. 'delta' is the elapsed time since the previous frame.
-		//public override void _Process(float delta)
-		//{
-		//	
-		//}
-
-		public bool IsTileWithinWorld(int x, int y)
+		
+		/// <summary>
+		/// This checks whether a given tile index is within the world boundaries.
+		/// </summary>
+		/// <param name="tilePosition">The x and y coordinates of a tile as represented in the tilemap.</param>
+		/// <returns>True or false.</returns>
+		public bool IsTileWithinWorld(Vector2 tilePosition)
 		{
+			int x = (int)tilePosition.x;
+			int y = (int)tilePosition.y;
 			if (x < 0 || x >= World.Width || y < 0 || y >= World.Height)
 				return false;
 			else
 				return true;
+		}
+
+		/// <summary>
+		/// Gets the tile at the given x and y coordinates.
+		/// </summary>
+		/// <param name="tilePosition">The x and y coordinates of a tile as represented in the tilemap.</param>
+		/// <returns>The tile. Will return null if trying to access an index outside of world boundaries.</returns>
+		public Tile GetTileAtPosition(Vector2 tilePosition)
+		{
+			int x = (int)tilePosition.x;
+			int y = (int)tilePosition.y;
+			return World.GetTileAt(x, y);
 		}
 	}
 }

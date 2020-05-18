@@ -74,18 +74,6 @@ namespace SpaceStationBuilder
                 }
 
                 leftMouseDrag = false;
-
-                /*
-                tilePos = tileSelectionGrid.WorldToMap(clickEvent.Position + mainCamera.Position);
-                if (WorldController.Instance.IsTileWithinWorld((int)tilePos.x, (int)tilePos.y))
-                {
-                    Tile tileUnderMouse = WorldController.Instance.World.GetTileAt((int)tilePos.x, (int)tilePos.y);
-                    if (tileUnderMouse.Type == Tile.TileType.Empty)
-                        tileUnderMouse.Type = Tile.TileType.Floor;
-                    else
-                        tileUnderMouse.Type = Tile.TileType.Empty;
-                }
-                */
             }
 
             #endregion
@@ -123,7 +111,7 @@ namespace SpaceStationBuilder
                 if (tilePos != oldTilePos && tileSelectionGrid.GetCellv(tilePos) == -1)
                 {
                     //if (tilePos.x < 0 || tilePos.x >= world.Width || tilePos.y < 0 || tilePos.y >= world.Height)
-                    if (!WorldController.Instance.IsTileWithinWorld((int)tilePos.x, (int)tilePos.y))
+                    if (!WorldController.Instance.IsTileWithinWorld(tilePos))
                     {
                         tileSelectionGrid.SetCellv(tilePos, -1);
                         tileSelectionGrid.SetCellv(oldTilePos, -1);
