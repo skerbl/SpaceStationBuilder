@@ -15,7 +15,7 @@ namespace SpaceStationBuilder
 		// Called when the node enters the scene tree for the first time.
 		public override void _Ready()
 		{
-			mainCamera = GetNode<Camera2D>("../Camera2D");
+			mainCamera = GetNode<Camera2D>("../../Camera2D");
 			previousPosition = mainCamera.Position;
 		}
 

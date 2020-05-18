@@ -9,11 +9,21 @@ namespace SpaceStationBuilder
         private TileMap worldGrid;
         private Camera2D mainCamera;
 
+        [Export]
+        private float minimumZoom = 0.5f;
+        [Export]
+        private float maximumZoom = 2f;
+        [Export]
+        private float zoomStep = 0.05f;
+
         private Vector2 tilePos = new Vector2(Vector2.Zero);
         private Vector2 oldTilePos = new Vector2(Vector2.Zero);
         private Vector2 dragStartPos = new Vector2(Vector2.Zero);
         private Vector2 dragEndPos = new Vector2(Vector2.Zero);
         private Vector2 previousMousePosition = new Vector2(Vector2.Zero);
+        private Vector2 zoomMin;
+        private Vector2 zoomMax;
+        private Vector2 zoomFactor;
         private bool moveCamera = false;
         private bool leftMouseDrag = false;
 
@@ -23,6 +33,10 @@ namespace SpaceStationBuilder
             worldGrid = GetNode<TileMap>("../../WorldController/World");
             tileSelectionGrid = GetNode<TileMap>("../TileSelectionGrid");
             mainCamera = GetNode<Camera2D>("../../Camera2D");
+
+            zoomMin = new Vector2(minimumZoom, minimumZoom);
+            zoomMax = new Vector2(maximumZoom, maximumZoom);
+            zoomFactor = new Vector2(zoomStep, zoomStep);
         }
 
         public override void _Process(float delta)
@@ -39,13 +53,14 @@ namespace SpaceStationBuilder
         public override void _UnhandledInput(InputEvent @event)
         {
             InputEventMouseButton clickEvent = @event as InputEventMouseButton;
-            //InputEventMouseMotion moveEvent = @event as InputEventMouseMotion;
+            InputEventMouseMotion moveEvent = @event as InputEventMouseMotion;
 
             #region Left mouse click
 
             // Start dragging
             if (clickEvent != null && clickEvent.ButtonIndex == (int)ButtonList.Left && @event.IsPressed())
             {
+                GetTree().SetInputAsHandled();
                 leftMouseDrag = true;
                 dragStartPos = tileSelectionGrid.WorldToMap(clickEvent.Position + mainCamera.Position);
             }
@@ -53,6 +68,7 @@ namespace SpaceStationBuilder
             // End dragging
             if (clickEvent != null && clickEvent.ButtonIndex == (int)ButtonList.Left && !@event.IsPressed())
             {
+                GetTree().SetInputAsHandled();
                 dragEndPos = tileSelectionGrid.WorldToMap(clickEvent.Position + mainCamera.Position);
                 WorldController.Instance.GridBoxSelect(dragStartPos, dragEndPos);
                 ClearGridSelection();
@@ -85,6 +101,21 @@ namespace SpaceStationBuilder
 
             #endregion
 
+            #region Zoom camera
+
+            if (clickEvent != null && clickEvent.ButtonIndex == (int)ButtonList.WheelUp && mainCamera.Zoom > zoomMin)
+            {
+                GetTree().SetInputAsHandled();
+                mainCamera.Zoom -= mainCamera.Zoom * zoomFactor;
+            }
+
+            if (clickEvent != null && clickEvent.ButtonIndex == (int)ButtonList.WheelDown && mainCamera.Zoom < zoomMax)
+            {
+                GetTree().SetInputAsHandled();
+                mainCamera.Zoom += mainCamera.Zoom * zoomFactor;
+            }
+
+            #endregion
             //#region Grid selection cursor
 
             //if (moveEvent != null)
