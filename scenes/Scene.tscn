@@ -1,10 +1,9 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://assets/background/Orbit_insertion.jpg" type="Texture" id=1]
 [ext_resource path="res://scenes/WorldController.tscn" type="PackedScene" id=2]
 [ext_resource path="res://Controllers/MouseManager.cs" type="Script" id=3]
 [ext_resource path="res://assets/sprites/UI/Selector.png" type="Texture" id=4]
-[ext_resource path="res://scenes/TestButton.gd" type="Script" id=5]
 [ext_resource path="res://assets/interface/grey_panel.png" type="Texture" id=6]
 [ext_resource path="res://assets/interface/interface_theme.theme" type="Theme" id=7]
 
@@ -86,7 +85,6 @@ margin_bottom = 93.0
 margin_right = 136.0
 margin_bottom = 27.0
 text = "Build Floor"
-script = ExtResource( 5 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -96,7 +94,6 @@ margin_top = 31.0
 margin_right = 136.0
 margin_bottom = 58.0
 text = "Deconstruct"
-script = ExtResource( 5 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -106,7 +103,6 @@ margin_top = 62.0
 margin_right = 136.0
 margin_bottom = 89.0
 text = "I am Button!"
-script = ExtResource( 5 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -132,3 +128,5 @@ scroll_ignore_camera_zoom = true
 [node name="Background" type="Sprite" parent="ParallaxBackground"]
 position = Vector2( 1392, 536 )
 texture = ExtResource( 1 )
+[connection signal="pressed" from="CanvasLayer/Interface/ButtonPanel/MarginContainer/VBoxContainer/BuildFloorButton" to="MouseManager" method="_on_BuildFloorButton_pressed"]
+[connection signal="pressed" from="CanvasLayer/Interface/ButtonPanel/MarginContainer/VBoxContainer/DeconstructButton" to="MouseManager" method="_on_DeconstructButton_pressed"]

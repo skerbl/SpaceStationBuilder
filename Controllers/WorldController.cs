@@ -8,9 +8,9 @@ namespace SpaceStationBuilder
 		public static WorldController Instance { get; protected set; }
 
 		public World World { get; protected set; }
+		public Tile.TileType BuildModeType { protected get; set; }
 
 		private TileMap tileMap;
-
 		
 
 		// Called when the node enters the scene tree for the first time.
@@ -119,7 +119,7 @@ namespace SpaceStationBuilder
 					t = World.GetTileAt(x, y);
 					if (t != null)
 					{
-						t.Type = Tile.TileType.Floor;
+						t.Type = BuildModeType;
 					}
 				}
 			}

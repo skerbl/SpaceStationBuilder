@@ -8,6 +8,7 @@ namespace SpaceStationBuilder
 		private TileMap tileSelectionGrid;
 		private TileMap worldGrid;
 		private Camera2D mainCamera;
+		private Tile.TileType buildModeTile;
 
 		[Export]
 		private float minimumZoom = 0.5f;
@@ -199,6 +200,17 @@ namespace SpaceStationBuilder
 					tileSelectionGrid.SetCell(x, y, -1);
 				}
 			}
+		}
+
+		private void _on_BuildFloorButton_pressed()
+		{
+			WorldController.Instance.BuildModeType = Tile.TileType.Floor;
+		}
+
+
+		private void _on_DeconstructButton_pressed()
+		{
+			WorldController.Instance.BuildModeType = Tile.TileType.Empty;
 		}
 	}
 }
