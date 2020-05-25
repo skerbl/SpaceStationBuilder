@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.Collections.Generic;
 
 namespace SpaceStationBuilder
 {
@@ -8,10 +9,12 @@ namespace SpaceStationBuilder
 		public static WorldController Instance { get; protected set; }
 
 		public World World { get; protected set; }
-		public Tile.TileType BuildModeType { protected get; set; }
+		public TileType BuildModeType { protected get; set; }
+		public bool BuildModeIsObject { protected get; set; } = false;
 
 		private TileMap tileMap;
-		
+		private Dictionary<string, int> tileIndexMap = new Dictionary<string, int>();
+
 
 		// Called when the node enters the scene tree for the first time.
 		public override void _Ready()
@@ -36,31 +39,33 @@ namespace SpaceStationBuilder
 					// Give it a name and a SpriteRenderer, and set the Sprite according to its type.
 					// Tile tileData = World.GetTileAt(x, y);
 					// GameObject tile_gameobject = new GameObject();
+					// tileGameObjectMap.Add(tileData, tile_gameobject)
 					// tile_gameobject.name = "Tile_" + x + "_" + y;
 					// tile_gameobject.transform.position = new Vector3(tileData.X, tileData.Y, 0);
 					// tile_gameobject.AddComponent<Spriterenderer>();
-					// tileData.RegisterTileTypeChangedCallback( (tile) => { OnTileTypeChanged(tile, tile_gameobject) })
+					// tileData.RegisterTileTypeChangedCallback( OnTileTypeChanged )
 
-					// In Godot, however, the TileMap handles all of that.
+					// In Godot, however, the TileMap handles all of that, so we only need to register the callback
 					// It could also be set with pre-made tilemaps
-
 					World.GetTileAt(x, y).RegisterTileTypeChangedCallback(OnTileTypeChanged);
 				}
 			}
 
+			CreateTileDictionary();
 			World.RandomizeTiles();
 		}
 		
-		// In Unity, this would also take a GameObject to update the SpriteRenderer's Sprite
+		// In Unity, this would also take a GameObject from a dictionary<Tile, GameObject> to update the SpriteRenderer's Sprite
 		void OnTileTypeChanged(Tile tileData)
 		{
-			if (tileData.Type == Tile.TileType.Empty)
+			string tileTypeName = tileData.Type.ToString();
+			if (tileIndexMap.ContainsKey(tileTypeName))
 			{
-				tileMap.SetCell(tileData.X, tileData.Y, -1);
+				tileMap.SetCell(tileData.X, tileData.Y, tileIndexMap[tileTypeName]);
 			}
 			else
 			{
-				tileMap.SetCell(tileData.X, tileData.Y, (int)tileData.Type);
+				GD.Print("Error: No tile found in tileset for type " + tileTypeName);
 			}
 		}
 		
@@ -119,9 +124,31 @@ namespace SpaceStationBuilder
 					t = World.GetTileAt(x, y);
 					if (t != null)
 					{
-						t.Type = BuildModeType;
+						if (BuildModeIsObject == true)
+						{
+							// Assign Object type
+							
+							// TODO: Implement more object types. For now it's only walls.
+							// Maybe a simple state machine could handle the various build and selection modes?
+							// Both WorldController and MouseController/UI could observe the state and act accordingly
+						}
+						else
+						{
+							t.Type = BuildModeType;
+						}
 					}
 				}
+			}
+		}
+
+		private void CreateTileDictionary()
+		{
+			Godot.Collections.Array tileIDs = tileMap.TileSet.GetTilesIds();
+			List<string> names = new List<string>();
+			for (int i = 0; i < tileIDs.Count; i++)
+			{
+				int tileID = (int)tileIDs[i];
+				tileIndexMap.Add(tileMap.TileSet.TileGetName(tileID), tileID);
 			}
 		}
 	}

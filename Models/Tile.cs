@@ -3,16 +3,16 @@ using System;
 
 namespace SpaceStationBuilder
 {
+	/// <summary>
+	/// The base type of the tile. Only used to differentiate between empty space and
+	/// the floor (more like space station structure/scaffolding/hull). Other types of 
+	/// objects like doors, walls, etc. will be implemented as InstalledObjects that are 
+	/// sitting on the floor.
+	/// </summary>
+	public enum TileType { Empty, Floor };
+
 	public class Tile
 	{
-		/// <summary>
-		/// The base type of the tile. Only used to differentiate between empty space and
-		/// the floor (more like space station structure/scaffolding/hull). Other types of 
-		/// objects like doors, walls, etc. will be implemented as InstalledObjects that are 
-		/// sitting on the floor.
-		/// </summary>
-		public enum TileType { Empty, Floor };
-
 		private TileType _type;
 		private TileType _oldType;
 		public TileType Type
@@ -62,6 +62,30 @@ namespace SpaceStationBuilder
 			this.world = world;
 			_x = x;
 			_y = y;
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="obj"></param>
+		/// <returns></returns>
+		public bool PlaceObject(InstalledObject objInstance)
+		{
+			if (objInstance == null)
+			{
+				// Uninstalling object
+				installedObject = null;
+				return true;
+			}
+
+			if (installedObject != null)
+			{
+				GD.PrintErr("Tile " + X + "," + Y + ": Unable to install object. This tile already has one.");
+				return false;
+			}
+
+			installedObject = objInstance;
+			return true;
 		}
 
 		/// <summary>

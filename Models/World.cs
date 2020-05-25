@@ -1,6 +1,6 @@
 using Godot;
 using System;
-
+using System.Collections.Generic;
 
 namespace SpaceStationBuilder
 {
@@ -10,7 +10,6 @@ namespace SpaceStationBuilder
 		/// A two-dimensional array to hold the tile data.
 		/// </summary>
 		private Tile[,] tiles;
-
 
 		private int _width;
 		/// <summary>
@@ -45,6 +44,9 @@ namespace SpaceStationBuilder
 			}
 
 			GD.Print("World created with " + width * height + " tiles.");
+
+			InstalledObject wallPrototype = InstalledObject.CreatePrototype("Wall", 0, 1, 1);
+
 		}
 
 		/// <summary>
@@ -62,11 +64,11 @@ namespace SpaceStationBuilder
 				{
 					if (rng.RandiRange(0, 2) == 0)
 					{
-						tiles[x, y].Type = Tile.TileType.Empty;
+						tiles[x, y].Type = TileType.Empty;
 					}
 					else
 					{
-						tiles[x, y].Type = Tile.TileType.Floor;
+						tiles[x, y].Type = TileType.Floor;
 					}
 				}
 			}

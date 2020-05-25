@@ -98,11 +98,11 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Button4" type="Button" parent="CanvasLayer/Interface/ButtonPanel/MarginContainer/VBoxContainer"]
+[node name="BuildWallButton" type="Button" parent="CanvasLayer/Interface/ButtonPanel/MarginContainer/VBoxContainer"]
 margin_top = 62.0
 margin_right = 136.0
 margin_bottom = 89.0
-text = "I am Button!"
+text = "Build Wall"
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -130,3 +130,4 @@ position = Vector2( 1392, 536 )
 texture = ExtResource( 1 )
 [connection signal="pressed" from="CanvasLayer/Interface/ButtonPanel/MarginContainer/VBoxContainer/BuildFloorButton" to="MouseManager" method="_on_BuildFloorButton_pressed"]
 [connection signal="pressed" from="CanvasLayer/Interface/ButtonPanel/MarginContainer/VBoxContainer/DeconstructButton" to="MouseManager" method="_on_DeconstructButton_pressed"]
+[connection signal="pressed" from="CanvasLayer/Interface/ButtonPanel/MarginContainer/VBoxContainer/BuildWallButton" to="MouseManager" method="_on_BuildWallButton_pressed"]
