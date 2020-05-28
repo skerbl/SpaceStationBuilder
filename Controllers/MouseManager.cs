@@ -215,9 +215,12 @@ namespace SpaceStationBuilder
 			WorldController.Instance.BuildModeType = TileType.Empty;
 		}
 
-		private void _on_BuildWallButton_pressed()
+		/*
+		private void SetModeBuildInstalledObject(string objectType)
 		{
 			WorldController.Instance.BuildModeIsObject = true;
+			WorldController.Instance.BuildModeObjectType = objectType;
 		}
+		*/
 	}
 }

@@ -11,9 +11,14 @@ namespace SpaceStationBuilder
 		public World World { get; protected set; }
 		public TileType BuildModeType { protected get; set; }
 		public bool BuildModeIsObject { protected get; set; } = false;
+		public string BuildModeObjectType { protected get; set; }
 
+		// TODO: Maybe separate these out into their own controllers/managers?
 		private TileMap tileMap;
 		private Dictionary<string, int> tileIndexMap = new Dictionary<string, int>();
+
+		private TileMap installedObjectMap;
+		private Dictionary<string, int> installedObjectIndexMap = new Dictionary<string, int>();
 
 
 		// Called when the node enters the scene tree for the first time.
@@ -29,7 +34,9 @@ namespace SpaceStationBuilder
 			}
 
 			tileMap = GetNode<TileMap>("World");
+			installedObjectMap = GetNode<TileMap>("InstalledObjects");
 			World = new World();
+			World.RegisterInstalledObjectCreated(OnInstalledObjectCreated);
 
 			for (int x = 0; x < World.Width; x++)
 			{
@@ -52,12 +59,18 @@ namespace SpaceStationBuilder
 			}
 
 			CreateTileDictionary();
+			CreateInstalledObjectDictionary();
 			World.RandomizeTiles();
 		}
-		
-		// In Unity, this would also take a GameObject from a dictionary<Tile, GameObject> to update the SpriteRenderer's Sprite
+
+		/// <summary>
+		/// The method that gets called as a callback whenever a tile's type changes.
+		/// </summary>
+		/// <param name="tileData"></param>
 		void OnTileTypeChanged(Tile tileData)
 		{
+			// In Unity, this would also take a GameObject from a dictionary<Tile, GameObject> to update the SpriteRenderer's Sprite
+
 			string tileTypeName = tileData.Type.ToString();
 			if (tileIndexMap.ContainsKey(tileTypeName))
 			{
@@ -66,6 +79,25 @@ namespace SpaceStationBuilder
 			else
 			{
 				GD.Print("Error: No tile found in tileset for type " + tileTypeName);
+			}
+		}
+
+		/// <summary>
+		/// The method that gets called as a callback whenever a new installed object gets created.
+		/// </summary>
+		/// <param name="obj"></param>
+		void OnInstalledObjectCreated(InstalledObject obj)
+		{
+			if (installedObjectIndexMap.ContainsKey(obj.ObjectType))
+			{
+				installedObjectMap.SetCell(obj.Tile.X, obj.Tile.Y, installedObjectIndexMap[obj.ObjectType]);
+
+				// Autotiles currently don't update automatically, so this needs to be called manually
+				installedObjectMap.UpdateBitmaskArea(new Vector2(obj.Tile.X, obj.Tile.Y));
+			}
+			else
+			{
+				GD.Print("Error: No tile found in InstalledObjects for type " + obj.ObjectType);
 			}
 		}
 		
@@ -96,6 +128,11 @@ namespace SpaceStationBuilder
 			return World.GetTileAt(x, y);
 		}
 
+		/// <summary>
+		/// This performs the selected build action on all tiles covered by the grid selection box.
+		/// </summary>
+		/// <param name="boxStart">The top left corner of the selection box.</param>
+		/// <param name="boxEnd">The bottom right corner of the selection box.</param>
 		public void GridBoxSelect(Vector2 boxStart, Vector2 boxEnd)
 		{
 			int start_x = (int)boxStart.x;
@@ -127,9 +164,9 @@ namespace SpaceStationBuilder
 						if (BuildModeIsObject == true)
 						{
 							// Assign Object type
-							
-							// TODO: Implement more object types. For now it's only walls.
-							// Maybe a simple state machine could handle the various build and selection modes?
+							World.PlaceInstalledObject(BuildModeObjectType, t);
+
+							// TODO: Maybe a simple state machine could handle the various build and selection modes?
 							// Both WorldController and MouseController/UI could observe the state and act accordingly
 						}
 						else
@@ -141,14 +178,29 @@ namespace SpaceStationBuilder
 			}
 		}
 
+		/// <summary>
+		/// This gets all the defined tile graphics from the world tilemap and maps their names to their indices.
+		/// </summary>
 		private void CreateTileDictionary()
 		{
 			Godot.Collections.Array tileIDs = tileMap.TileSet.GetTilesIds();
-			List<string> names = new List<string>();
 			for (int i = 0; i < tileIDs.Count; i++)
 			{
 				int tileID = (int)tileIDs[i];
 				tileIndexMap.Add(tileMap.TileSet.TileGetName(tileID), tileID);
+			}
+		}
+
+		/// <summary>
+		/// This gets all the defined object graphics from the installed object tilemap and maps their names to their indices.
+		/// </summary>
+		private void CreateInstalledObjectDictionary()
+		{
+			Godot.Collections.Array installedObjectIDs = installedObjectMap.TileSet.GetTilesIds();
+			for (int i = 0; i < installedObjectIDs.Count; i++)
+			{
+				int tileID = (int)installedObjectIDs[i];
+				installedObjectIndexMap.Add(installedObjectMap.TileSet.TileGetName(tileID), tileID);
 			}
 		}
 	}

@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/461_mars_atmosphere.jpg-e78a82d71e50b4f6317a56342992087e.stex"
+path="res://.import/461_mars_atmosphere.jpg-a5373c5bf99fe4205ceb7a8b28552fa3.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/background/461_mars_atmosphere.jpg"
-dest_files=[ "res://.import/461_mars_atmosphere.jpg-e78a82d71e50b4f6317a56342992087e.stex" ]
+source_file="res://Assets/background/461_mars_atmosphere.jpg"
+dest_files=[ "res://.import/461_mars_atmosphere.jpg-a5373c5bf99fe4205ceb7a8b28552fa3.stex" ]
 
 [params]
 

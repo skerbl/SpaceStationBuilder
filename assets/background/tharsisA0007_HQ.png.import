@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/tharsisA0007_HQ.png-cba11a674a1564c30cc8486d8bad44c6.stex"
+path="res://.import/tharsisA0007_HQ.png-d84be93eeb16411e1132e6659af02db2.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/background/tharsisA0007_HQ.png"
-dest_files=[ "res://.import/tharsisA0007_HQ.png-cba11a674a1564c30cc8486d8bad44c6.stex" ]
+source_file="res://Assets/background/tharsisA0007_HQ.png"
+dest_files=[ "res://.import/tharsisA0007_HQ.png-d84be93eeb16411e1132e6659af02db2.stex" ]
 
 [params]
 

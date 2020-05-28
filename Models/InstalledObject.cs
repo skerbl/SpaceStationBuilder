@@ -15,12 +15,12 @@ namespace SpaceStationBuilder
 		/// This represents the BASE tile of the object. For multi-tile objects, this would be
 		/// the top left corner.
 		/// </summary>
-		Tile tile;
+		public Tile Tile { get; protected set; }
 
 		/// <summary>
 		/// The type of the object.
 		/// </summary>
-		string objectType;
+		public string ObjectType { get; protected set; }
 
 		/// <summary>
 		/// A multiplier that (inversely) modifies the effective movement speed across the tile. Can be 
@@ -31,6 +31,11 @@ namespace SpaceStationBuilder
 
 		int width = 1;
 		int height = 1;
+
+		/// <summary>
+		/// This callback will be called whenever an installed object changes some of its state (i.e. a door opening or closing).
+		/// </summary>
+		Action<InstalledObject> cbOnChanged;
 
 		// TODO: Implement multi-tile objects
 		// TODO: Implement object rotation
@@ -54,7 +59,7 @@ namespace SpaceStationBuilder
 		public static InstalledObject CreatePrototype(string objectType, float movementCost = 1f, int width = 1, int height = 1)
 		{
 			InstalledObject obj = new InstalledObject();
-			obj.objectType = objectType;
+			obj.ObjectType = objectType;
 			obj.movementCost = movementCost;
 			obj.width = width;
 			obj.height = height;
@@ -80,12 +85,12 @@ namespace SpaceStationBuilder
 		public static InstalledObject Placeinstance(InstalledObject prototype, Tile tile)
 		{
 			InstalledObject obj = new InstalledObject();
-			obj.objectType = prototype.objectType;
+			obj.ObjectType = prototype.ObjectType;
 			obj.movementCost = prototype.movementCost;
 			obj.width = prototype.width;
 			obj.height = prototype.height;
 
-			obj.tile = tile;
+			obj.Tile = tile;
 
 			// FIXME: This assumes an object size of 1x1. Don't forget multi-tile objects.
 			if (tile.PlaceObject(obj) == false)

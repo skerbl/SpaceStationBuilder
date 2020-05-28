@@ -23,6 +23,8 @@ namespace SpaceStationBuilder
 		/// </summary>
 		public int Height { get => _height; }
 
+		Action<InstalledObject> cbInstalledObjectCreated;
+
 		/// <summary>
 		/// Constructor for the <see cref="World"/> object.
 		/// </summary>
@@ -88,6 +90,33 @@ namespace SpaceStationBuilder
 				return null;
 			}
 			return tiles[x, y];
+		}
+
+		public void PlaceInstalledObject(string objectType, Tile tile)
+		{
+			// FIXME: This assumes an object size of 1x1. Don't forget multi-tile objects.
+			if (InstalledObject.Prototypes.ContainsKey(objectType) == false)
+			{
+				GD.Print("InstalledObject.Prototypes does not contain a prototype for key " + objectType);
+				return;
+			}
+
+			InstalledObject obj = InstalledObject.Placeinstance(InstalledObject.Prototypes[objectType], tile);
+
+			if (obj != null)
+			{
+				cbInstalledObjectCreated?.Invoke(obj);
+			}
+		}
+
+		public void RegisterInstalledObjectCreated(Action<InstalledObject> callback)
+		{
+			cbInstalledObjectCreated += callback;
+		}
+
+		public void UnregisterInstalledObjectCreated(Action<InstalledObject> callback)
+		{
+			cbInstalledObjectCreated -= callback;
 		}
 	}
 }

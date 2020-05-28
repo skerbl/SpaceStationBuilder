@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/grey_pressed.png-695a71fed83691293d9864385b4c7188.stex"
+path="res://.import/grey_pressed.png-f1097b9694789ef47b5036532e1959aa.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/interface/button/grey_pressed.png"
-dest_files=[ "res://.import/grey_pressed.png-695a71fed83691293d9864385b4c7188.stex" ]
+source_file="res://Assets/interface/button/grey_pressed.png"
+dest_files=[ "res://.import/grey_pressed.png-f1097b9694789ef47b5036532e1959aa.stex" ]
 
 [params]
 

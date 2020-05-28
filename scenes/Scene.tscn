@@ -1,13 +1,14 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://assets/background/Orbit_insertion.jpg" type="Texture" id=1]
 [ext_resource path="res://scenes/WorldController.tscn" type="PackedScene" id=2]
 [ext_resource path="res://Controllers/MouseManager.cs" type="Script" id=3]
 [ext_resource path="res://assets/sprites/UI/Selector.png" type="Texture" id=4]
+[ext_resource path="res://Scripts/BuildButtonContainer.cs" type="Script" id=5]
 [ext_resource path="res://assets/interface/grey_panel.png" type="Texture" id=6]
 [ext_resource path="res://assets/interface/interface_theme.theme" type="Theme" id=7]
 
-[sub_resource type="TileSet" id=1]
+[sub_resource type="TileSet" id=2]
 0/name = "Selector.png 0"
 0/texture = ExtResource( 4 )
 0/tex_offset = Vector2( 0, 0 )
@@ -57,31 +58,32 @@ __meta__ = {
 
 [node name="NinePatchRect" type="NinePatchRect" parent="CanvasLayer/Interface/ButtonPanel"]
 margin_right = 144.0
-margin_bottom = 97.0
+margin_bottom = 128.0
 texture = ExtResource( 6 )
 patch_margin_left = 5
 patch_margin_top = 5
 patch_margin_right = 5
 patch_margin_bottom = 5
 
-[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/Interface/ButtonPanel"]
+[node name="BuildButtonContainer" type="MarginContainer" parent="CanvasLayer/Interface/ButtonPanel"]
 margin_right = 144.0
-margin_bottom = 97.0
+margin_bottom = 128.0
 custom_constants/margin_right = 4
 custom_constants/margin_top = 4
 custom_constants/margin_left = 4
 custom_constants/margin_bottom = 4
+script = ExtResource( 5 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/Interface/ButtonPanel/MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/Interface/ButtonPanel/BuildButtonContainer"]
 margin_left = 4.0
 margin_top = 4.0
 margin_right = 140.0
-margin_bottom = 93.0
+margin_bottom = 124.0
 
-[node name="BuildFloorButton" type="Button" parent="CanvasLayer/Interface/ButtonPanel/MarginContainer/VBoxContainer"]
+[node name="BuildFloorButton" type="Button" parent="CanvasLayer/Interface/ButtonPanel/BuildButtonContainer/VBoxContainer"]
 margin_right = 136.0
 margin_bottom = 27.0
 text = "Build Floor"
@@ -89,7 +91,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="DeconstructButton" type="Button" parent="CanvasLayer/Interface/ButtonPanel/MarginContainer/VBoxContainer"]
+[node name="DeconstructButton" type="Button" parent="CanvasLayer/Interface/ButtonPanel/BuildButtonContainer/VBoxContainer"]
 margin_top = 31.0
 margin_right = 136.0
 margin_bottom = 58.0
@@ -98,7 +100,9 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="BuildWallButton" type="Button" parent="CanvasLayer/Interface/ButtonPanel/MarginContainer/VBoxContainer"]
+[node name="WallButton" type="Button" parent="CanvasLayer/Interface/ButtonPanel/BuildButtonContainer/VBoxContainer" groups=[
+"BuildButtons",
+]]
 margin_top = 62.0
 margin_right = 136.0
 margin_bottom = 89.0
@@ -107,6 +111,11 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="TestButton" type="Button" parent="CanvasLayer/Interface/ButtonPanel/BuildButtonContainer/VBoxContainer"]
+margin_top = 93.0
+margin_right = 136.0
+margin_bottom = 120.0
+
 [node name="WorldController" parent="." instance=ExtResource( 2 )]
 
 [node name="MouseManager" type="Node2D" parent="."]
@@ -114,7 +123,7 @@ script = ExtResource( 3 )
 
 [node name="TileSelectionGrid" type="TileMap" parent="MouseManager"]
 z_index = 1
-tile_set = SubResource( 1 )
+tile_set = SubResource( 2 )
 cell_size = Vector2( 32, 32 )
 format = 1
 
@@ -128,6 +137,5 @@ scroll_ignore_camera_zoom = true
 [node name="Background" type="Sprite" parent="ParallaxBackground"]
 position = Vector2( 1392, 536 )
 texture = ExtResource( 1 )
-[connection signal="pressed" from="CanvasLayer/Interface/ButtonPanel/MarginContainer/VBoxContainer/BuildFloorButton" to="MouseManager" method="_on_BuildFloorButton_pressed"]
-[connection signal="pressed" from="CanvasLayer/Interface/ButtonPanel/MarginContainer/VBoxContainer/DeconstructButton" to="MouseManager" method="_on_DeconstructButton_pressed"]
-[connection signal="pressed" from="CanvasLayer/Interface/ButtonPanel/MarginContainer/VBoxContainer/BuildWallButton" to="MouseManager" method="_on_BuildWallButton_pressed"]
+[connection signal="pressed" from="CanvasLayer/Interface/ButtonPanel/BuildButtonContainer/VBoxContainer/BuildFloorButton" to="MouseManager" method="_on_BuildFloorButton_pressed"]
+[connection signal="pressed" from="CanvasLayer/Interface/ButtonPanel/BuildButtonContainer/VBoxContainer/DeconstructButton" to="MouseManager" method="_on_DeconstructButton_pressed"]
