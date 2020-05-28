@@ -99,6 +99,13 @@ namespace SpaceStationBuilder
 			{
 				GD.Print("Error: No tile found in InstalledObjects for type " + obj.ObjectType);
 			}
+
+			obj.RegisterOnChangedCallback(OnInstalledObjectChanged);
+		}
+
+		void OnInstalledObjectChanged(InstalledObject obj)
+		{
+			GD.Print("OnInstalledObjectChanged -- Not implemented yet.");
 		}
 		
 		/// <summary>

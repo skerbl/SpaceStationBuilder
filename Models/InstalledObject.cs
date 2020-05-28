@@ -103,5 +103,15 @@ namespace SpaceStationBuilder
 
 			return obj;
 		}
+
+		public void RegisterOnChangedCallback(Action<InstalledObject> callback)
+		{
+			cbOnChanged += callback;
+		}
+
+		public void UnregisterOnChangedCallback(Action<InstalledObject> callback)
+		{
+			cbOnChanged -= callback;
+		}
 	}
 }
