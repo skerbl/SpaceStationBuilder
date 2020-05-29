@@ -53,14 +53,14 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Controllers\CameraParallax.cs" />
-    <Compile Include="Controllers\MouseManager.cs" />
-    <Compile Include="Controllers\MoveCamera.cs" />
-    <Compile Include="Controllers\WorldController.cs" />
-    <Compile Include="Models\InstalledObject.cs" />
-    <Compile Include="Models\LooseObject.cs" />
-    <Compile Include="Models\Tile.cs" />
-    <Compile Include="Models\World.cs" />
+    <Compile Include="Scripts\Controllers\CameraParallax.cs" />
+    <Compile Include="Scripts\Controllers\MouseManager.cs" />
+    <Compile Include="Scripts\Controllers\MoveCamera.cs" />
+    <Compile Include="Scripts\Controllers\WorldController.cs" />
+    <Compile Include="Scripts\Models\InstalledObject.cs" />
+    <Compile Include="Scripts\Models\LooseObject.cs" />
+    <Compile Include="Scripts\Models\Tile.cs" />
+    <Compile Include="Scripts\Models\World.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Scripts\BuildButtonContainer.cs" />
   </ItemGroup>
