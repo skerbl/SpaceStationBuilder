@@ -204,14 +204,14 @@ namespace SpaceStationBuilder
 
 		private void _on_BuildFloorButton_pressed()
 		{
-			WorldController.Instance.BuildModeIsObject = false;
+			WorldController.Instance.BuildModeIsFurniture = false;
 			WorldController.Instance.BuildModeType = TileType.Floor;
 		}
 
 
 		private void _on_DeconstructButton_pressed()
 		{
-			WorldController.Instance.BuildModeIsObject = false;
+			WorldController.Instance.BuildModeIsFurniture = false;
 			WorldController.Instance.BuildModeType = TileType.Empty;
 		}
 

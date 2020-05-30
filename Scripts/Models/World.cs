@@ -23,7 +23,7 @@ namespace SpaceStationBuilder
 		/// </summary>
 		public int Height { get => _height; }
 
-		Action<InstalledObject> cbInstalledObjectCreated;
+		Action<Furniture> cbFurnitureCreated;
 
 		/// <summary>
 		/// Constructor for the <see cref="World"/> object.
@@ -47,7 +47,7 @@ namespace SpaceStationBuilder
 
 			GD.Print("World created with " + width * height + " tiles.");
 
-			InstalledObject wallPrototype = InstalledObject.CreatePrototype("Wall", 0, 1, 1);
+			Furniture wallPrototype = Furniture.CreatePrototype("Wall", 0, 1, 1, true);
 
 		}
 
@@ -92,31 +92,31 @@ namespace SpaceStationBuilder
 			return tiles[x, y];
 		}
 
-		public void PlaceInstalledObject(string objectType, Tile tile)
+		public void PlaceFurniture(string furnitureType, Tile tile)
 		{
-			// FIXME: This assumes an object size of 1x1. Don't forget multi-tile objects.
-			if (InstalledObject.Prototypes.ContainsKey(objectType) == false)
+			// FIXME: This assumes furniture size of 1x1. Don't forget multi-tile objects.
+			if (Furniture.Prototypes.ContainsKey(furnitureType) == false)
 			{
-				GD.Print("InstalledObject.Prototypes does not contain a prototype for key " + objectType);
+				GD.Print("Furniture.Prototypes does not contain a prototype for key " + furnitureType);
 				return;
 			}
 
-			InstalledObject obj = InstalledObject.Placeinstance(InstalledObject.Prototypes[objectType], tile);
+			Furniture obj = Furniture.Placeinstance(Furniture.Prototypes[furnitureType], tile);
 
 			if (obj != null)
 			{
-				cbInstalledObjectCreated?.Invoke(obj);
+				cbFurnitureCreated?.Invoke(obj);
 			}
 		}
 
-		public void RegisterInstalledObjectCreated(Action<InstalledObject> callback)
+		public void RegisterFurnitureCreated(Action<Furniture> callback)
 		{
-			cbInstalledObjectCreated += callback;
+			cbFurnitureCreated += callback;
 		}
 
-		public void UnregisterInstalledObjectCreated(Action<InstalledObject> callback)
+		public void UnregisterFurnitureCreated(Action<Furniture> callback)
 		{
-			cbInstalledObjectCreated -= callback;
+			cbFurnitureCreated -= callback;
 		}
 	}
 }

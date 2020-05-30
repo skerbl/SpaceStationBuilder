@@ -36,12 +36,12 @@ namespace SpaceStationBuilder
 		/// <summary>
 		/// This represents any type of movable object, like resources, tools, crates, etc.
 		/// </summary>
-		LooseObject looseObject;
+		Inventory inventory;
 
 		/// <summary>
 		/// This represents constructed, immovable objects, like doors, walls, furniture, etc.
 		/// </summary>
-		InstalledObject installedObject;
+		public Furniture Furniture { get; protected set; }
 
 		private World world;
 		private readonly int _x;
@@ -65,26 +65,26 @@ namespace SpaceStationBuilder
 		}
 
 		/// <summary>
-		/// 
+		/// Places furniture on the tile.
 		/// </summary>
-		/// <param name="obj"></param>
-		/// <returns></returns>
-		public bool PlaceObject(InstalledObject objInstance)
+		/// <param name="instance">An instance of the furniture type to be placed</param>
+		/// <returns>Success or failure</returns>
+		public bool PlaceFurniture(Furniture instance)
 		{
-			if (objInstance == null)
+			if (instance == null)
 			{
 				// Uninstalling object
-				installedObject = null;
+				Furniture = null;
 				return true;
 			}
 
-			if (installedObject != null)
+			if (Furniture != null)
 			{
 				GD.PrintErr("Tile " + X + "," + Y + ": Unable to install object. This tile already has one.");
 				return false;
 			}
 
-			installedObject = objInstance;
+			Furniture = instance;
 			return true;
 		}
 

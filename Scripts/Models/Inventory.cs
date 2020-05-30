@@ -5,9 +5,9 @@ namespace SpaceStationBuilder
 {
 	/// <summary>
 	/// This represents any type of movable object, like resources, tools, crates, etc.
-	/// This is also used for non-installed <see cref="InstalledObject"/>, like a boxed up sofa.
+	/// This is also used for non-installed <see cref="Furniture"/>, like a boxed up sofa.
 	/// </summary>
-	public class LooseObject
+	public class Inventory
 	{
 	}
 }

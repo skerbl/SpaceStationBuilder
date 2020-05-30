@@ -10,15 +10,15 @@ namespace SpaceStationBuilder
 
 		public World World { get; protected set; }
 		public TileType BuildModeType { protected get; set; }
-		public bool BuildModeIsObject { protected get; set; } = false;
-		public string BuildModeObjectType { protected get; set; }
+		public bool BuildModeIsFurniture { protected get; set; } = false;
+		public string BuildModeFurnitureType { protected get; set; }
 
 		// TODO: Maybe separate these out into their own controllers/managers?
 		private TileMap tileMap;
 		private Dictionary<string, int> tileIndexMap = new Dictionary<string, int>();
 
-		private TileMap installedObjectMap;
-		private Dictionary<string, int> installedObjectIndexMap = new Dictionary<string, int>();
+		private TileMap furnitureMap;
+		private Dictionary<string, int> furnitureIndexMap = new Dictionary<string, int>();
 
 
 		// Called when the node enters the scene tree for the first time.
@@ -33,10 +33,40 @@ namespace SpaceStationBuilder
 				Instance = this;
 			}
 
+			/*
+			List<Resource> textureResources = new List<Resource>();
+			Directory dir = new Directory();
+			dir.Open("Resources");
+			string dirPath = dir.GetCurrentDir();
+			dir.ListDirBegin();
+			string fileName = dir.GetNext();
+
+			while (fileName != "")
+			{
+				if (dir.CurrentIsDir())
+				{
+
+				}
+				else if (fileName.ToLower().EndsWith(".png"))
+				{
+					Texture tex = (Texture)GD.Load(dir.GetCurrentDir() + "/" + fileName);
+					tex.ResourceName = fileName.Remove(fileName.Length - ".png".Length);
+					textureResources.Add(tex);
+				}
+				else
+				{
+
+				}
+
+				fileName = dir.GetNext();
+			}
+			dir.ListDirEnd();
+			*/
+
 			tileMap = GetNode<TileMap>("World");
-			installedObjectMap = GetNode<TileMap>("InstalledObjects");
+			furnitureMap = GetNode<TileMap>("InstalledObjects");
 			World = new World();
-			World.RegisterInstalledObjectCreated(OnInstalledObjectCreated);
+			World.RegisterFurnitureCreated(OnFurnitureCreated);
 
 			for (int x = 0; x < World.Width; x++)
 			{
@@ -59,7 +89,7 @@ namespace SpaceStationBuilder
 			}
 
 			CreateTileDictionary();
-			CreateInstalledObjectDictionary();
+			CreateFurnitureDictionary();
 			World.RandomizeTiles();
 		}
 
@@ -86,24 +116,24 @@ namespace SpaceStationBuilder
 		/// The method that gets called as a callback whenever a new installed object gets created.
 		/// </summary>
 		/// <param name="obj"></param>
-		void OnInstalledObjectCreated(InstalledObject obj)
+		void OnFurnitureCreated(Furniture obj)
 		{
-			if (installedObjectIndexMap.ContainsKey(obj.ObjectType))
+			if (furnitureIndexMap.ContainsKey(obj.Type))
 			{
-				installedObjectMap.SetCell(obj.Tile.X, obj.Tile.Y, installedObjectIndexMap[obj.ObjectType]);
+				furnitureMap.SetCell(obj.Tile.X, obj.Tile.Y, furnitureIndexMap[obj.Type]);
 
 				// Autotiles currently don't update automatically, so this needs to be called manually
-				installedObjectMap.UpdateBitmaskArea(new Vector2(obj.Tile.X, obj.Tile.Y));
+				furnitureMap.UpdateBitmaskArea(new Vector2(obj.Tile.X, obj.Tile.Y));
 			}
 			else
 			{
-				GD.Print("Error: No tile found in InstalledObjects for type " + obj.ObjectType);
+				GD.Print("Error: No tile found in InstalledObjects for type " + obj.Type);
 			}
 
-			obj.RegisterOnChangedCallback(OnInstalledObjectChanged);
+			obj.RegisterOnChangedCallback(OnFurnitureChanged);
 		}
 
-		void OnInstalledObjectChanged(InstalledObject obj)
+		void OnFurnitureChanged(Furniture obj)
 		{
 			GD.Print("OnInstalledObjectChanged -- Not implemented yet.");
 		}
@@ -168,10 +198,10 @@ namespace SpaceStationBuilder
 					t = World.GetTileAt(x, y);
 					if (t != null)
 					{
-						if (BuildModeIsObject == true)
+						if (BuildModeIsFurniture == true)
 						{
 							// Assign Object type
-							World.PlaceInstalledObject(BuildModeObjectType, t);
+							World.PlaceFurniture(BuildModeFurnitureType, t);
 
 							// TODO: Maybe a simple state machine could handle the various build and selection modes?
 							// Both WorldController and MouseController/UI could observe the state and act accordingly
@@ -201,13 +231,13 @@ namespace SpaceStationBuilder
 		/// <summary>
 		/// This gets all the defined object graphics from the installed object tilemap and maps their names to their indices.
 		/// </summary>
-		private void CreateInstalledObjectDictionary()
+		private void CreateFurnitureDictionary()
 		{
-			Godot.Collections.Array installedObjectIDs = installedObjectMap.TileSet.GetTilesIds();
+			Godot.Collections.Array installedObjectIDs = furnitureMap.TileSet.GetTilesIds();
 			for (int i = 0; i < installedObjectIDs.Count; i++)
 			{
 				int tileID = (int)installedObjectIDs[i];
-				installedObjectIndexMap.Add(installedObjectMap.TileSet.TileGetName(tileID), tileID);
+				furnitureIndexMap.Add(furnitureMap.TileSet.TileGetName(tileID), tileID);
 			}
 		}
 	}

@@ -30,8 +30,8 @@ namespace SpaceStationBuilder
 			}
 
 			// TODO: This should probably be done in some sort of state machine.
-			WorldController.Instance.BuildModeIsObject = true;
-			WorldController.Instance.BuildModeObjectType = buttonName;
+			WorldController.Instance.BuildModeIsFurniture = true;
+			WorldController.Instance.BuildModeFurnitureType = buttonName;
 		}
 	}
 }
