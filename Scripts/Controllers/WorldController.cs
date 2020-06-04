@@ -35,8 +35,8 @@ namespace SpaceStationBuilder
 			}
 
 			World = new World();
-			World.RegisterFurnitureCreated(OnFurnitureCreated);
-			World.RegisterTileChanged(OnTileChanged);
+			World.cbFurnitureCreated += OnFurnitureCreated;
+			World.cbTileChanged += OnTileChanged;
 		}
 
 		// Called when the node enters the scene tree for the first time.
@@ -81,7 +81,6 @@ namespace SpaceStationBuilder
 				}
 				else if (fileName.ToLower().EndsWith(".png"))
 				{
-					//Texture tex = (Texture)GD.Load(dir.GetCurrentDir() + "/" + fileName);
 					Texture tex = GD.Load<Texture>(dir.GetCurrentDir() + "/" + fileName);
 					tex.ResourceName = fileName.Remove(fileName.Length - ".png".Length);
 					spriteResources.Add(tex);
@@ -133,7 +132,8 @@ namespace SpaceStationBuilder
 				GD.Print("Error: No tile found in InstalledObjects for type " + obj.Type);
 			}
 
-			obj.RegisterOnChangedCallback(OnFurnitureChanged);
+			obj.cbOnChanged += OnFurnitureChanged;
+			//obj.RegisterOnChangedCallback(OnFurnitureChanged);
 		}
 
 		/// <summary>
@@ -207,9 +207,23 @@ namespace SpaceStationBuilder
 					{
 						if (BuildModeIsFurniture == true)
 						{
-							// Assign Object type
-							World.PlaceFurniture(BuildModeFurnitureType, t);
+							string furnitureType = BuildModeFurnitureType;
+							if (World.IsFurniturePlacementValid(furnitureType, t) && t.pendingFurnitureJob == null)
+							{
+								Job job = new Job(t, (theJob) =>
+								{
+									World.PlaceFurniture(furnitureType, theJob.Tile);
+									t.pendingFurnitureJob = null;
+								});
 
+								// FIXME: Manually setting flags like this is not ideal.
+								t.pendingFurnitureJob = job;
+								job.cbJobCancelled += (theJob) => { theJob.Tile.pendingFurnitureJob = null; };
+
+								World.jobQueue.Enqueue(job);
+								GD.Print("Job Queue size: " + World.jobQueue.Count);
+							}
+							
 							// TODO: Maybe a simple state machine could handle the various build and selection modes?
 							// Both WorldController and MouseController/UI could observe the state and act accordingly
 						}

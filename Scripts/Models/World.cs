@@ -23,8 +23,15 @@ namespace SpaceStationBuilder
 		/// </summary>
 		public int Height { get => _height; }
 
-		Action<Tile> cbTileChanged;
-		Action<Furniture> cbFurnitureCreated;
+		/// <summary>
+		/// A simple queue that holds requested jobs. This will almost
+		/// certainly be moved into a separate class that manages multiple
+		/// of these queues, each containing specific job types.
+		/// </summary>
+		public Queue<Job> jobQueue;
+
+		public event Action<Tile> cbTileChanged;
+		public event Action<Furniture> cbFurnitureCreated;
 
 		/// <summary>
 		/// Constructor for the <see cref="World"/> object.
@@ -43,9 +50,13 @@ namespace SpaceStationBuilder
 				for (int y = 0; y < _height; y++)
 				{
 					tiles[x, y] = new Tile(this, x, y);
-					tiles[x, y].RegisterTileTypeChangedCallback(OnTileChanged);
+					//tiles[x, y].RegisterTileTypeChangedCallback(OnTileChanged);
+					tiles[x, y].cbTileChanged += OnTileChanged;
 				}
 			}
+
+			// TODO: Refactor this jobQueue out into an own dedicated class that handles multiple job queues.
+			jobQueue = new Queue<Job>();
 
 			GD.Print("World created with " + width * height + " tiles.");
 
@@ -128,37 +139,14 @@ namespace SpaceStationBuilder
 			}
 		}
 
+		public bool IsFurniturePlacementValid(string furnitureType, Tile t)
+		{
+			return Furniture.Prototypes[furnitureType].funcValidatePosition(t);
+		}
+
 		void OnTileChanged(Tile t)
 		{
 			cbTileChanged?.Invoke(t);
-		}
-
-		/// <summary>
-		/// This gets called whenever a piece of furniture gets created.
-		/// </summary>
-		/// <param name="callback">The callback method</param>
-		public void RegisterFurnitureCreated(Action<Furniture> callback)
-		{
-			cbFurnitureCreated += callback;
-		}
-
-		public void UnregisterFurnitureCreated(Action<Furniture> callback)
-		{
-			cbFurnitureCreated -= callback;
-		}
-
-		/// <summary>
-		/// This gets called when any tile changes its type.
-		/// </summary>
-		/// <param name="callback">The callback method</param>
-		public void RegisterTileChanged(Action<Tile> callback)
-		{
-			cbTileChanged += callback;
-		}
-
-		public void UnregisterTileChanged(Action<Tile> callback)
-		{
-			cbTileChanged -= callback;
 		}
 	}
 }

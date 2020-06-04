@@ -12,8 +12,8 @@ namespace SpaceStationBuilder
 
 		public override void _Ready()
 		{
-			WorldController.Instance.World.RegisterTileChanged(OnTileTypeChanged);
-			WorldController.Instance.World.RegisterFurnitureCreated(OnFurnitureCreated);
+			WorldController.Instance.World.cbTileChanged += OnTileChanged;
+			WorldController.Instance.World.cbFurnitureCreated += OnFurnitureCreated;
 			LoadStockSounds();
 		}
 
@@ -36,7 +36,7 @@ namespace SpaceStationBuilder
 			worldSFX.Add("Wall_OnCreated", GD.Load<AudioStreamSample>("res://Assets/sounds/Wall_OnCreated.wav"));
 		}
 
-		void OnTileTypeChanged(Tile tileData)
+		void OnTileChanged(Tile tileData)
 		{
 			if (soundCooldown > 0)
 				return;
@@ -44,6 +44,10 @@ namespace SpaceStationBuilder
 			if (worldSFX.ContainsKey(tileData.Type.ToString() + "_OnCreated"))
 			{
 				PlaySound(tileData.Type.ToString() + "_OnCreated");
+			}
+			else
+			{
+				PlaySound("Floor_OnCreated");
 			}
 		}
 
@@ -55,6 +59,10 @@ namespace SpaceStationBuilder
 			if (worldSFX.ContainsKey(obj.Type + "_OnCreated"))
 			{
 				PlaySound(obj.Type + "_OnCreated");
+			}
+			else
+			{
+				PlaySound("Wall_OnCreated");
 			}
 		}
 	}

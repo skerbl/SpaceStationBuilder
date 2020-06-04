@@ -31,7 +31,7 @@ namespace SpaceStationBuilder
 		/// <summary>
 		/// The delegate for a tile changing its type.
 		/// </summary>
-		Action<Tile> cbTileChanged;
+		public event Action<Tile> cbTileChanged;
 
 		/// <summary>
 		/// This represents any type of movable object, like resources, tools, crates, etc.
@@ -42,6 +42,8 @@ namespace SpaceStationBuilder
 		/// This represents constructed, immovable objects, like doors, walls, furniture, etc.
 		/// </summary>
 		public Furniture Furniture { get; protected set; }
+
+		public Job pendingFurnitureJob;
 
 		private World world;
 		private readonly int _x;

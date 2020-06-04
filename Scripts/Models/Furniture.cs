@@ -41,9 +41,9 @@ namespace SpaceStationBuilder
 		/// <summary>
 		/// This callback will be called whenever an installed object changes some of its state (i.e. a door opening or closing).
 		/// </summary>
-		Action<Furniture> cbOnChanged;
+		public event Action<Furniture> cbOnChanged;
 
-		public Func<Tile, bool> funcPositionValid;
+		public Func<Tile, bool> funcValidatePosition;
 
 		// TODO: Implement multi-tile objects
 		// TODO: Implement object rotation
@@ -75,7 +75,7 @@ namespace SpaceStationBuilder
 			obj.height = height;
 			obj.LinksToNeighbours = linksToNeighbours;
 
-			obj.funcPositionValid = obj.IsPositionValid;
+			obj.funcValidatePosition = obj.IsPositionValid;
 
 			if (Prototypes.ContainsKey(type))
 			{
@@ -97,7 +97,7 @@ namespace SpaceStationBuilder
 		/// <returns>A reference to the object instance on success, null on failure.</returns>
 		public static Furniture Placeinstance(Furniture prototype, Tile tile)
 		{
-			if (prototype.funcPositionValid(tile) == false)
+			if (prototype.funcValidatePosition(tile) == false)
 			{
 				GD.Print("PlaceInstance -- Position invalid.");
 				return null;
@@ -122,6 +122,11 @@ namespace SpaceStationBuilder
 			}
 
 			return obj;
+		}
+
+		public bool IsValidPosition(Tile t)
+		{
+			return funcValidatePosition(t);
 		}
 
 		/// <summary>
@@ -157,16 +162,6 @@ namespace SpaceStationBuilder
 			}
 
 			return true;
-		}
-
-		public void RegisterOnChangedCallback(Action<Furniture> callback)
-		{
-			cbOnChanged += callback;
-		}
-
-		public void UnregisterOnChangedCallback(Action<Furniture> callback)
-		{
-			cbOnChanged -= callback;
 		}
 	}
 }
