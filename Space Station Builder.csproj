@@ -56,6 +56,7 @@
     <Compile Include="Scripts\Controllers\CameraParallax.cs" />
     <Compile Include="Scripts\Controllers\MouseManager.cs" />
     <Compile Include="Scripts\Controllers\MoveCamera.cs" />
+    <Compile Include="Scripts\Controllers\TilemapController.cs" />
     <Compile Include="Scripts\Controllers\WorldController.cs" />
     <Compile Include="Scripts\Models\Furniture.cs" />
     <Compile Include="Scripts\Models\Inventory.cs" />

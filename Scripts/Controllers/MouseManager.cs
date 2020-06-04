@@ -5,6 +5,7 @@ namespace SpaceStationBuilder
 {
 	public class MouseManager : Node2D
 	{
+		private TilemapController tilemapController;
 		private TileMap tileSelectionGrid;
 		private TileMap worldGrid;
 		private Camera2D mainCamera;
@@ -31,7 +32,8 @@ namespace SpaceStationBuilder
 		// Called when the node enters the scene tree for the first time.
 		public override void _Ready()
 		{
-			worldGrid = GetNode<TileMap>("../WorldController/World");
+			worldGrid = GetNode<TileMap>("../TilemapController/World");
+			tilemapController = GetNode<TilemapController>("../TilemapController");
 			tileSelectionGrid = GetNode<TileMap>("./TileSelectionGrid");
 			mainCamera = GetNode<Camera2D>("../Camera2D");
 
@@ -69,7 +71,7 @@ namespace SpaceStationBuilder
 			{
 				GetTree().SetInputAsHandled();
 				dragEndPos = tileSelectionGrid.WorldToMap(GetGlobalMousePosition().Round());
-				WorldController.Instance.GridBoxSelect(dragStartPos, dragEndPos);
+				tilemapController.GridBoxSelect(dragStartPos, dragEndPos);
 				ClearGridSelection();
 				leftMouseDrag = false;
 			}
@@ -204,15 +206,15 @@ namespace SpaceStationBuilder
 
 		private void _on_BuildFloorButton_pressed()
 		{
-			WorldController.Instance.BuildModeIsFurniture = false;
-			WorldController.Instance.BuildModeType = TileType.Floor;
+			tilemapController.BuildModeIsFurniture = false;
+			tilemapController.BuildModeType = TileType.Floor;
 		}
 
 
 		private void _on_DeconstructButton_pressed()
 		{
-			WorldController.Instance.BuildModeIsFurniture = false;
-			WorldController.Instance.BuildModeType = TileType.Empty;
+			tilemapController.BuildModeIsFurniture = false;
+			tilemapController.BuildModeType = TileType.Empty;
 		}
 
 		/*
