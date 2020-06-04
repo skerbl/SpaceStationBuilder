@@ -111,10 +111,13 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="TestButton" type="Button" parent="CanvasLayer/Interface/ButtonPanel/BuildButtonContainer/VBoxContainer"]
+[node name="DoorButton" type="Button" parent="CanvasLayer/Interface/ButtonPanel/BuildButtonContainer/VBoxContainer" groups=[
+"BuildButtons",
+]]
 margin_top = 93.0
 margin_right = 136.0
 margin_bottom = 120.0
+text = "Build Door"
 
 [node name="WorldController" parent="." instance=ExtResource( 2 )]
 

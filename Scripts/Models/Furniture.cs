@@ -43,6 +43,8 @@ namespace SpaceStationBuilder
 		/// </summary>
 		Action<Furniture> cbOnChanged;
 
+		public Func<Tile, bool> funcPositionValid;
+
 		// TODO: Implement multi-tile objects
 		// TODO: Implement object rotation
 
@@ -73,6 +75,8 @@ namespace SpaceStationBuilder
 			obj.height = height;
 			obj.LinksToNeighbours = linksToNeighbours;
 
+			obj.funcPositionValid = obj.IsPositionValid;
+
 			if (Prototypes.ContainsKey(type))
 			{
 				GD.Print("Unable to create prototype " + type + ".");
@@ -93,6 +97,12 @@ namespace SpaceStationBuilder
 		/// <returns>A reference to the object instance on success, null on failure.</returns>
 		public static Furniture Placeinstance(Furniture prototype, Tile tile)
 		{
+			if (prototype.funcPositionValid(tile) == false)
+			{
+				GD.Print("PlaceInstance -- Position invalid.");
+				return null;
+			}
+
 			Furniture obj = new Furniture();
 			obj.Type = prototype.Type;
 			obj.movementCost = prototype.movementCost;
@@ -112,6 +122,41 @@ namespace SpaceStationBuilder
 			}
 
 			return obj;
+		}
+
+		/// <summary>
+		/// Checks the general condition for furniture placement: Is there a floor underneath?
+		/// </summary>
+		/// <param name="t">The tile</param>
+		/// <returns>True or false</returns>
+		private bool IsPositionValid(Tile t)
+		{
+			if (t.Type != TileType.Floor)
+			{
+				return false;
+			}
+
+			if (t.Furniture != null)
+			{
+				return false;
+			}
+
+			return true;
+		}
+
+		/// <summary>
+		/// Checks the condition for door placement: Are there neighbours on either side (NS or EW)?
+		/// </summary>
+		/// <param name="t">The tile</param>
+		/// <returns>True or false</returns>
+		private bool IsPositionValidDoor(Tile t)
+		{
+			if (IsPositionValid(t) == false)
+			{
+				return false;
+			}
+
+			return true;
 		}
 
 		public void RegisterOnChangedCallback(Action<Furniture> callback)

@@ -13,6 +13,8 @@ namespace SpaceStationBuilder
 		public bool BuildModeIsFurniture { protected get; set; } = false;
 		public string BuildModeFurnitureType { protected get; set; }
 
+		private WorldSFX worldAudioPlayer;
+
 		// TODO: Maybe separate these out into their own controllers/managers?
 		private TileMap tileMap;
 		private Dictionary<string, int> tileIndexMap = new Dictionary<string, int>();
@@ -20,10 +22,9 @@ namespace SpaceStationBuilder
 		private TileMap furnitureMap;
 		private Dictionary<string, int> furnitureIndexMap = new Dictionary<string, int>();
 
-
-		// Called when the node enters the scene tree for the first time.
-		public override void _Ready()
+		public override void _EnterTree()
 		{
+			//base._EnterTree();
 			if (Instance != null)
 			{
 				GD.Print("There should only be one WorldController instance.");
@@ -33,8 +34,39 @@ namespace SpaceStationBuilder
 				Instance = this;
 			}
 
-			/*
-			List<Resource> textureResources = new List<Resource>();
+			World = new World();
+			World.RegisterFurnitureCreated(OnFurnitureCreated);
+			World.RegisterTileChanged(OnTileChanged);
+		}
+
+		// Called when the node enters the scene tree for the first time.
+		public override void _Ready()
+		{
+			tileMap = GetNode<TileMap>("World");
+			furnitureMap = GetNode<TileMap>("InstalledObjects");
+			worldAudioPlayer = GetNode<WorldSFX>("WorldAudioPlayer");
+
+			CreateTileDictionary();
+			CreateFurnitureDictionary();
+
+			for (int x = 0; x < World.Width; x++)
+			{
+				for (int y = 0; y < World.Height; y++)
+				{
+					World.GetTileAt(x, y).Type = TileType.Empty;
+					tileMap.SetCell(x, y, tileIndexMap["Empty"]);
+				}
+			}
+
+			// Maybe center the camera on the World?
+
+			//World.RandomizeTiles();
+			//World.SetAllTiles(TileType.Empty);
+		}
+
+		void LoadFurnitureSprites()
+		{
+			List<Resource> spriteResources = new List<Resource>();
 			Directory dir = new Directory();
 			dir.Open("Resources");
 			string dirPath = dir.GetCurrentDir();
@@ -49,9 +81,10 @@ namespace SpaceStationBuilder
 				}
 				else if (fileName.ToLower().EndsWith(".png"))
 				{
-					Texture tex = (Texture)GD.Load(dir.GetCurrentDir() + "/" + fileName);
+					//Texture tex = (Texture)GD.Load(dir.GetCurrentDir() + "/" + fileName);
+					Texture tex = GD.Load<Texture>(dir.GetCurrentDir() + "/" + fileName);
 					tex.ResourceName = fileName.Remove(fileName.Length - ".png".Length);
-					textureResources.Add(tex);
+					spriteResources.Add(tex);
 				}
 				else
 				{
@@ -61,43 +94,13 @@ namespace SpaceStationBuilder
 				fileName = dir.GetNext();
 			}
 			dir.ListDirEnd();
-			*/
-
-			tileMap = GetNode<TileMap>("World");
-			furnitureMap = GetNode<TileMap>("InstalledObjects");
-			World = new World();
-			World.RegisterFurnitureCreated(OnFurnitureCreated);
-
-			for (int x = 0; x < World.Width; x++)
-			{
-				for (int y = 0; y < World.Height; y++)
-				{
-					// In Unity, I'd create a new GameObject here, and set its correct position according to the tile index. 
-					// Give it a name and a SpriteRenderer, and set the Sprite according to its type.
-					// Tile tileData = World.GetTileAt(x, y);
-					// GameObject tile_gameobject = new GameObject();
-					// tileGameObjectMap.Add(tileData, tile_gameobject)
-					// tile_gameobject.name = "Tile_" + x + "_" + y;
-					// tile_gameobject.transform.position = new Vector3(tileData.X, tileData.Y, 0);
-					// tile_gameobject.AddComponent<Spriterenderer>();
-					// tileData.RegisterTileTypeChangedCallback( OnTileTypeChanged )
-
-					// In Godot, however, the TileMap handles all of that, so we only need to register the callback
-					// It could also be set with pre-made tilemaps
-					World.GetTileAt(x, y).RegisterTileTypeChangedCallback(OnTileTypeChanged);
-				}
-			}
-
-			CreateTileDictionary();
-			CreateFurnitureDictionary();
-			World.RandomizeTiles();
 		}
 
 		/// <summary>
 		/// The method that gets called as a callback whenever a tile's type changes.
 		/// </summary>
 		/// <param name="tileData"></param>
-		void OnTileTypeChanged(Tile tileData)
+		void OnTileChanged(Tile tileData)
 		{
 			// In Unity, this would also take a GameObject from a dictionary<Tile, GameObject> to update the SpriteRenderer's Sprite
 
@@ -133,6 +136,10 @@ namespace SpaceStationBuilder
 			obj.RegisterOnChangedCallback(OnFurnitureChanged);
 		}
 
+		/// <summary>
+		/// The method that gets called whenever furniture gets changed (i.e. a door opening, or something taking damage)
+		/// </summary>
+		/// <param name="obj">The furniture that got changed</param>
 		void OnFurnitureChanged(Furniture obj)
 		{
 			GD.Print("OnInstalledObjectChanged -- Not implemented yet.");

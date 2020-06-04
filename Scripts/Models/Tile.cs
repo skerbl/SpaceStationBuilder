@@ -21,9 +21,9 @@ namespace SpaceStationBuilder
 			set {
 				_oldType = _type;
 				_type = value;
-				if (_oldType != _type && cbTileTypeChanged != null)
+				if (_oldType != _type && cbTileChanged != null)
 				{
-					cbTileTypeChanged(this);
+					cbTileChanged(this);
 				}
 			}
 		}
@@ -31,7 +31,7 @@ namespace SpaceStationBuilder
 		/// <summary>
 		/// The delegate for a tile changing its type.
 		/// </summary>
-		Action<Tile> cbTileTypeChanged;
+		Action<Tile> cbTileChanged;
 
 		/// <summary>
 		/// This represents any type of movable object, like resources, tools, crates, etc.
@@ -93,7 +93,7 @@ namespace SpaceStationBuilder
 		/// </summary>
 		public void RegisterTileTypeChangedCallback(Action<Tile> callback)
 		{
-			cbTileTypeChanged += callback;
+			cbTileChanged += callback;
 		}
 
 		/// <summary>
@@ -101,7 +101,7 @@ namespace SpaceStationBuilder
 		/// </summary>
 		public void UnregisterTileTypeChangedCallback(Action<Tile> callback)
 		{
-			cbTileTypeChanged -= callback;
+			cbTileChanged -= callback;
 		}
 	}
 

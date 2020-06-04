@@ -10,7 +10,7 @@ namespace SpaceStationBuilder
 		{
 			// This is just for testing. Button will probably be created somewhere else, and can be added
 			// to the BuildButtonGroup there as well.
-			Button testButton = GetNode<Button>("./VBoxContainer/TestButton");
+			Button testButton = GetNode<Button>("./VBoxContainer/DoorButton");
 			testButton.AddToGroup("BuildButtons");
 
 			// Get all nodes in the BuildButtonGroup and connect their pressed signal to the method below,

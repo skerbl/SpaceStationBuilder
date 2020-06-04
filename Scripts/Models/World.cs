@@ -23,6 +23,7 @@ namespace SpaceStationBuilder
 		/// </summary>
 		public int Height { get => _height; }
 
+		Action<Tile> cbTileChanged;
 		Action<Furniture> cbFurnitureCreated;
 
 		/// <summary>
@@ -42,13 +43,31 @@ namespace SpaceStationBuilder
 				for (int y = 0; y < _height; y++)
 				{
 					tiles[x, y] = new Tile(this, x, y);
+					tiles[x, y].RegisterTileTypeChangedCallback(OnTileChanged);
 				}
 			}
 
 			GD.Print("World created with " + width * height + " tiles.");
 
+			// TODO: Find a better place for creating the prototypes. Maybe in a separate ResourceLoader class?
 			Furniture wallPrototype = Furniture.CreatePrototype("Wall", 0, 1, 1, true);
+			Furniture doorPrototype = Furniture.CreatePrototype("Door", 0, 1, 1, true);
+		}
 
+		/// <summary>
+		/// This sets all tiles of the world to one type.
+		/// </summary>
+		/// <param name="type">The type</param>
+		public void SetAllTiles(TileType type)
+		{
+			for (int x = 0; x < _width; x++)
+			{
+				for (int y = 0; y < _height; y++)
+				{
+					
+					tiles[x, y].Type = type;
+				}
+			}
 		}
 
 		/// <summary>
@@ -109,6 +128,15 @@ namespace SpaceStationBuilder
 			}
 		}
 
+		void OnTileChanged(Tile t)
+		{
+			cbTileChanged?.Invoke(t);
+		}
+
+		/// <summary>
+		/// This gets called whenever a piece of furniture gets created.
+		/// </summary>
+		/// <param name="callback">The callback method</param>
 		public void RegisterFurnitureCreated(Action<Furniture> callback)
 		{
 			cbFurnitureCreated += callback;
@@ -117,6 +145,20 @@ namespace SpaceStationBuilder
 		public void UnregisterFurnitureCreated(Action<Furniture> callback)
 		{
 			cbFurnitureCreated -= callback;
+		}
+
+		/// <summary>
+		/// This gets called when any tile changes its type.
+		/// </summary>
+		/// <param name="callback">The callback method</param>
+		public void RegisterTileChanged(Action<Tile> callback)
+		{
+			cbTileChanged += callback;
+		}
+
+		public void UnregisterTileChanged(Action<Tile> callback)
+		{
+			cbTileChanged -= callback;
 		}
 	}
 }
