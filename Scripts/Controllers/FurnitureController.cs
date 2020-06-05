@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace SpaceStationBuilder
 {
-	public class TilemapController : Node2D
+	public class FurnitureController : Node2D
 	{
 		public TileType BuildModeType { protected get; set; }
 		public bool BuildModeIsFurniture { protected get; set; } = false;
@@ -83,6 +83,8 @@ namespace SpaceStationBuilder
 		/// <param name="tileData"></param>
 		void OnTileChanged(Tile tileData)
 		{
+			// In Unity, this would also take a GameObject from a dictionary<Tile, GameObject> to update the SpriteRenderer's Sprite
+
 			string tileTypeName = tileData.Type.ToString();
 			if (tileIndexMap.ContainsKey(tileTypeName))
 			{

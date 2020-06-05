@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://assets/background/Orbit_insertion.jpg" type="Texture" id=1]
 [ext_resource path="res://scenes/WorldController.tscn" type="PackedScene" id=2]
@@ -8,6 +8,7 @@
 [ext_resource path="res://assets/interface/grey_panel.png" type="Texture" id=6]
 [ext_resource path="res://assets/interface/interface_theme.theme" type="Theme" id=7]
 [ext_resource path="res://scenes/TilemapController.tscn" type="PackedScene" id=8]
+[ext_resource path="res://scenes/FurnitureController.tscn" type="PackedScene" id=9]
 
 [sub_resource type="TileSet" id=1]
 0/name = "Selector.png 0"
@@ -123,6 +124,9 @@ text = "Build Door"
 [node name="WorldController" parent="." instance=ExtResource( 2 )]
 
 [node name="TilemapController" parent="." instance=ExtResource( 8 )]
+
+[node name="FurnitureController" parent="." instance=ExtResource( 9 )]
+script = null
 
 [node name="MouseManager" type="Node2D" parent="."]
 script = ExtResource( 3 )

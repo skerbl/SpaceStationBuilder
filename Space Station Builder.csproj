@@ -54,6 +54,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Scripts\Controllers\CameraParallax.cs" />
+    <Compile Include="Scripts\Controllers\FurnitureController.cs" />
     <Compile Include="Scripts\Controllers\MouseManager.cs" />
     <Compile Include="Scripts\Controllers\MoveCamera.cs" />
     <Compile Include="Scripts\Controllers\TilemapController.cs" />
